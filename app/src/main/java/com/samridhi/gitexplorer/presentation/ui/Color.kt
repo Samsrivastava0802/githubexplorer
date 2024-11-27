@@ -1,4 +1,4 @@
-package com.samridhi.gitexplorer.ui.theme
+package com.samridhi.gitexplorer.presentation.ui
 
 import androidx.compose.ui.graphics.Color
 

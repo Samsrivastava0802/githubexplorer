@@ -1,4 +1,4 @@
-package com.samridhi.gitexplorer.ui.theme
+package com.samridhi.gitexplorer.presentation.ui
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

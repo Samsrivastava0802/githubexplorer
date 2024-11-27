@@ -1,6 +1,5 @@
-package com.samridhi.gitexplorer.ui.theme
+package com.samridhi.gitexplorer.presentation.ui
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
