@@ -20,7 +20,7 @@ class HomeScreenViewModel @Inject constructor(
         private set
 
     init {
-
+        fetchRepository("clone")
     }
 
     fun onEvent(event: HomeScreenUIEvent) {
@@ -28,23 +28,33 @@ class HomeScreenViewModel @Inject constructor(
             is HomeScreenUIEvent.SearchTextChanged -> {
                 onSearchTextChange(event.text)
             }
+
             HomeScreenUIEvent.OnSearch -> {
                 onSearch()
             }
         }
     }
-    private fun onSearch(){
-      if (uiState.searchFieldValue.text.isBlank()||uiState.searchFieldValue.text.isEmpty())
-          return
-        fetchRepository()
+
+    private fun onSearch() {
+        if (uiState.searchFieldValue.text.isBlank() || uiState.searchFieldValue.text.isEmpty()) return
+        uiState = uiState.copy(screenState = ScreenState.LOADING)
+        fetchRepository(uiState.searchFieldValue.text)
     }
-    private fun fetchRepository(){
+
+    private fun fetchRepository(text: String) {
         viewModelScope.launch {
-           val data = appUseCase.invoke(uiState.searchFieldValue.text)
-            if (data.isSuccessful){
-                uiState = uiState.copy(
-                    items = data.body()?.items ?: emptyList()
+            val data = appUseCase.invoke(text)
+            uiState = if (data.isSuccessful) {
+                uiState.copy(
+                    items = data.body()?.items ?: emptyList(),
+                    screenState = if (data.body()?.items?.isNotEmpty() == true) {
+                        ScreenState.DEFAULT
+                    } else {
+                        ScreenState.EMPTY
+                    }
                 )
+            } else {
+                uiState.copy(screenState = ScreenState.ERROR)
             }
         }
     }
@@ -60,11 +70,14 @@ data class HomeScreenUiState(
     val screenState: ScreenState = ScreenState.LOADING,
     val searchFieldValue: TextFieldValue = TextFieldValue(),
     val items: List<GitHubRepo> = emptyList()
-)
+){
+    fun getOwnerName(item:GitHubRepo) = item.full_name.split("/")[0]
+    fun getRepoName(item:GitHubRepo) = item.full_name.split("/")[1]
+}
 
 sealed class HomeScreenUIEvent {
     data class SearchTextChanged(val text: String) : HomeScreenUIEvent()
-    object OnSearch: HomeScreenUIEvent()
+    object OnSearch : HomeScreenUIEvent()
 }
 
 enum class ScreenState {

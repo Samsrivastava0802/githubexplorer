@@ -9,19 +9,21 @@ import com.samridhi.gitexplorer.presentation.repositorydetail.RepositoryDetailSc
 
 @Composable
 fun AppNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    startDestination: String = AppScreen.HomeScreen.route,
+    navActions: AppNavigationActions
 ) {
     NavHost(
         navController = navController,
-        startDestination = "home",
+        startDestination = startDestination,
     ) {
         composable(
-            route = "home"
+            route = AppScreen.HomeScreen.route
         ) {
-            HomeScreen()
+            HomeScreen(onAction = navActions::navigateFromHomeScreen)
         }
         composable(
-            route = "repoDetailScreen"
+            route = AppScreen.RepositoryDetailScreen.route
         ) {
            RepositoryDetailScreen()
         }

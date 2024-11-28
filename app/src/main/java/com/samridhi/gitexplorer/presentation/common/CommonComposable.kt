@@ -9,12 +9,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -35,6 +40,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import com.samridhi.gitexplorer.presentation.ui.Grey200
+import com.samridhi.gitexplorer.presentation.ui.errorColor
 import com.samridhi.gitexplorer.presentation.ui.labelColor
 import com.samridhi.gitexplorer.presentation.ui.placeHolderColor
 import com.samridhi.gitexplorer.presentation.ui.textColor
@@ -130,5 +136,35 @@ fun CustomTextField(
                 keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
             )
         }
+    }
+}
+@Composable
+fun ProgressLoader(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = modifier.size(56.dp)
+        )
+    }
+}
+
+@Composable
+fun ErrorMessage(
+    errorMessage: String,
+    error: Boolean = false
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = errorMessage,
+            color = if (error) errorColor else Color.Black,
+            style = MaterialTheme.typography.labelLarge
+        )
     }
 }

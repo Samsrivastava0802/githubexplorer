@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">GitExplorer</string>
     <string name="search_repository">Search Repository</string>
+    <string name="no_data_available">No data available</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="repository_details">Repository details</string>
 </resources>

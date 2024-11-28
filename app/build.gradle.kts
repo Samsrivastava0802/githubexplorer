@@ -83,6 +83,9 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     // work-work
     implementation(libs.work.runtime)
+
+    // coil
+    implementation("io.coil-kt.coil3:coil-compose:3.0.0-rc01")
 }
 kapt {
     correctErrorTypes = true
