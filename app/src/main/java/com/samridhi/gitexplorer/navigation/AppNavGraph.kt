@@ -25,7 +25,7 @@ fun AppNavGraph(
         composable(
             route = AppScreen.RepositoryDetailScreen.route
         ) {
-           RepositoryDetailScreen()
+           RepositoryDetailScreen(onAction = navActions::navigateFromRepoDetailScreen)
         }
     }
 }

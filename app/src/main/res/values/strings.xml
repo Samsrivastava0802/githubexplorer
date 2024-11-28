@@ -4,4 +4,8 @@
     <string name="no_data_available">No data available</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="repository_details">Repository details</string>
+    <string name="star">Star</string>
+    <string name="forks">Forks</string>
+    <string name="issues">Issues</string>
+    <string name="watchers">Watchers</string>
 </resources>

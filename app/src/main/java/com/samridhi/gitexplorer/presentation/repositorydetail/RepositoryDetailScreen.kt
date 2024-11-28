@@ -1,5 +1,8 @@
 package com.samridhi.gitexplorer.presentation.repositorydetail
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,14 +33,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.samridhi.gitexplorer.R
+import com.samridhi.gitexplorer.app.App
+import com.samridhi.gitexplorer.navigation.HomeScreenActions
+import com.samridhi.gitexplorer.navigation.RepositoryDetailsScreenActions
 import com.samridhi.gitexplorer.presentation.common.ErrorMessage
 import com.samridhi.gitexplorer.presentation.common.ProgressLoader
 import com.samridhi.gitexplorer.presentation.home.ScreenState
@@ -47,18 +55,23 @@ import com.samridhi.gitexplorer.util.AppString
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RepositoryDetailScreen(
-    viewModel: RepositoryDetailViewModel = hiltViewModel()
+    viewModel: RepositoryDetailViewModel = hiltViewModel(),
+    onAction: (repositoryDetailsScreenActions: RepositoryDetailsScreenActions) -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = AppString.search_repository)
+                        text = stringResource(id = AppString.search_repository),
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 14.sp)
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { }) {
+                    IconButton(
+                        onClick = {
+                            onAction(RepositoryDetailsScreenActions.OnBack)
+                        }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }
@@ -94,6 +107,7 @@ fun RepositoryDetailScreenContent(
         }
 
         ScreenState.DEFAULT -> {
+            val context = LocalContext.current
             Column(
                 modifier = modifier
                     .fillMaxSize()
@@ -137,10 +151,13 @@ fun RepositoryDetailScreenContent(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    InfoItem(label = "Stars", value = uiState.stars)
-                    InfoItem(label = "Forks", value = uiState.forks)
-                    InfoItem(label = "Issues", value = uiState.issues)
-                    InfoItem(label = "Watchers", value = uiState.watchers)
+                    InfoItem(label = stringResource(id = AppString.star), value = uiState.stars)
+                    InfoItem(label = stringResource(id = AppString.forks), value = uiState.forks)
+                    InfoItem(label = stringResource(id = AppString.issues), value = uiState.issues)
+                    InfoItem(
+                        label = stringResource(id = AppString.watchers),
+                        value = uiState.watchers
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -157,7 +174,7 @@ fun RepositoryDetailScreenContent(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.clickable {
-                        // Handle click (e.g., open link in browser)
+                        openUrl(uiState.projectLink, context)
                     }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -209,6 +226,16 @@ fun InfoItem(label: String, value: String) {
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onBackground
         )
+    }
+}
+
+fun openUrl(url: String?, context: Context) {
+    url?.let {
+        val intent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse(it)
+        )
+        context.startActivity(intent)
     }
 }
 

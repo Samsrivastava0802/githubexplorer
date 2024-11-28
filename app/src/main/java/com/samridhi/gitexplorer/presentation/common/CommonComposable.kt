@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
@@ -37,7 +38,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import com.samridhi.gitexplorer.presentation.ui.Grey200
 import com.samridhi.gitexplorer.presentation.ui.errorColor
@@ -138,6 +138,7 @@ fun CustomTextField(
         }
     }
 }
+
 @Composable
 fun ProgressLoader(
     modifier: Modifier = Modifier
@@ -148,6 +149,20 @@ fun ProgressLoader(
     ) {
         CircularProgressIndicator(
             modifier = modifier.size(56.dp)
+        )
+    }
+}
+
+@Composable
+fun HorizontalProgressLoader() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(70.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(56.dp)
         )
     }
 }
@@ -167,4 +182,24 @@ fun ErrorMessage(
             style = MaterialTheme.typography.labelLarge
         )
     }
+}
+
+private val colorMap by lazy {
+    mapOf(
+        'A' to "FFC8DBFF", 'B' to "FFEBC9FF", 'C' to "FFFFEAC2",
+        'D' to "FFA0F2F1", 'E' to "FFAFE9D4", 'F' to "FFC8DBFF",
+        'G' to "FFC9EFFF", 'H' to "FFFFACE3", 'I' to "FFFFC8CE",
+        'J' to "FFFFCEAB", 'K' to "FFC8DBFF", 'L' to "FFEBC9FF",
+        'M' to "FFFFEAC2", 'N' to "FFA0F2F1", 'O' to "FFAFE9D4",
+        'P' to "FFC8DBFF", 'Q' to "FFC9EFFF", 'R' to "FFFFACE3",
+        'S' to "FFFFC8CE", 'T' to "FFFFCEAB", 'U' to "FFC8DBFF",
+        'V' to "FFEBC9FF", 'W' to "FFFFEAC2", 'X' to "FFA0F2F1",
+        'Y' to "FFAFE9D4", 'Z' to "FFC8DBFF"
+    )
+}
+
+fun getBackgroundColor(language: String): Long {
+    val defaultColor = "FFC8DBFF"
+    val firstChar = language.uppercase().firstOrNull() ?: return defaultColor.toLong(16)
+    return (colorMap[firstChar] ?: defaultColor).toLong(16)
 }

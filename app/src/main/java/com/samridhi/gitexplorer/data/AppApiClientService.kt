@@ -9,10 +9,11 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface AppApiClientService {
-
     @GET("search/repositories")
     suspend fun searchRepository(
-        @Query("q") query: String
+        @Query("q") query: String,
+        @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = 10
     ): Response<GitHubUserSearchResponse>
 
     // to get detail of a repository

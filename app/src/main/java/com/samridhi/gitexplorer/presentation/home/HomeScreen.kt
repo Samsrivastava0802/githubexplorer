@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -33,13 +34,16 @@ import com.samridhi.gitexplorer.data.models.reponse.GitHubRepo
 import com.samridhi.gitexplorer.navigation.HomeScreenActions
 import com.samridhi.gitexplorer.presentation.common.CustomTextField
 import com.samridhi.gitexplorer.presentation.common.ErrorMessage
+import com.samridhi.gitexplorer.presentation.common.HorizontalProgressLoader
 import com.samridhi.gitexplorer.presentation.common.ProgressLoader
+import com.samridhi.gitexplorer.presentation.common.getBackgroundColor
 import com.samridhi.gitexplorer.presentation.ui.Grey
 import com.samridhi.gitexplorer.presentation.ui.Grey400
 import com.samridhi.gitexplorer.presentation.ui.paragraph
 import com.samridhi.gitexplorer.presentation.ui.paragraphDefaultRegular
 import com.samridhi.gitexplorer.util.AppDrawable
 import com.samridhi.gitexplorer.util.AppString
+import com.samridhi.gitexplorer.util.isScrolledToTheEnd
 
 @Composable
 fun HomeScreen(
@@ -75,6 +79,7 @@ fun HomeScreenContent(
         }
 
         else -> {
+            val listState = rememberLazyListState()
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -111,7 +116,7 @@ fun HomeScreenContent(
                 if (uiState.screenState == ScreenState.LOADING) {
                     ProgressLoader()
                 } else {
-                    LazyColumn {
+                    LazyColumn(state = listState) {
                         items(uiState.items.size) {
                             val data = uiState.items[it]
                             RepositoryItem(
@@ -125,10 +130,16 @@ fun HomeScreenContent(
                             )
                             Spacer(modifier = Modifier.size(24.dp))
                         }
+                        item {
+                            if (uiState.isLoadingMore) {
+                                HorizontalProgressLoader()
+                            }
+                        }
+                    }
+                    if (listState.isScrolledToTheEnd()) {
+                        onEvent(HomeScreenUIEvent.LoadMore)
                     }
                 }
-
-
             }
         }
     }
@@ -163,18 +174,18 @@ fun RepositoryItem(
         Spacer(modifier = Modifier.size(24.dp))
         Text(
             text = data.description ?: "hi",
+            maxLines = 4,
             style = MaterialTheme.typography.paragraph
         )
-        Row(
-            modifier = Modifier.padding(top = 12.dp)
-        ) {
+        Spacer(modifier = Modifier.size(24.dp))
+        Row{
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
                         .size(14.dp)
-                        .background(color = Color.Red, shape = CircleShape)
+                        .background(color = Color(getBackgroundColor(data.language ?: "a")), shape = CircleShape)
                 )
                 Spacer(modifier = Modifier.size(4.dp))
                 Text(
@@ -187,7 +198,8 @@ fun RepositoryItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(id = AppDrawable.baseline_dark_mode_24),
+                    modifier = Modifier.size(14.dp),
+                    painter = painterResource(id = AppDrawable.star),
                     contentDescription = ""
                 )
                 Spacer(modifier = Modifier.size(4.dp))
@@ -203,9 +215,26 @@ fun RepositoryItem(
 @Preview(showBackground = true)
 @Composable
 fun HomePreview() {
-    HomeScreenContent(
-        uiState = HomeScreenUiState(),
-        onEvent = {},
-        onCardClick = { owner, repo -> }
-    )
+//    HomeScreenContent(
+//        uiState = HomeScreenUiState(),
+//        onEvent = {},
+//        onCardClick = { owner, repo -> }
+//    )
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        RepositoryItem(
+            data = GitHubRepo(
+                name = "LearnIt",
+                full_name = "meesho/LearnIt",
+                html_url = "https://github.com/meesho/LearnIt",
+                description = "An educational app to simplify learning",
+                language = "Kotlin",
+                stargazers_count = 123
+            ),
+            onClick = {
+
+            }
+        )
+    }
 }

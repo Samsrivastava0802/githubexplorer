@@ -7,8 +7,12 @@ class AppRepository @Inject constructor(
     private val service: AppApiClientService
 ) {
     suspend fun getSearchData(
-        query: String
-    ) = service.searchRepository(query)
+        query: String,
+        page : Int
+    ) = service.searchRepository(
+        query = query,
+        page = page
+    )
 
     suspend fun getRepoData(
         owner: String, repo: String
