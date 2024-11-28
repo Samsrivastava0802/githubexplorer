@@ -32,3 +32,23 @@ val Typography = Typography(
     )
     */
 )
+val Typography.paragraph: TextStyle
+    get() = TextStyle(
+        fontWeight = FontWeight.W400,
+        fontSize = 16.sp,
+        lineHeight = 24.sp
+    )
+
+val Typography.paragraphDefaultRegular: TextStyle
+    get() = TextStyle(
+        fontWeight = FontWeight.W500,
+        fontSize = 16.sp,
+        lineHeight = 24.sp
+    )
+
+val Typography.ht1: TextStyle
+    get() = TextStyle(
+        fontWeight = FontWeight.W500,
+        fontSize = 24.sp,
+        lineHeight = 32.sp
+    )
